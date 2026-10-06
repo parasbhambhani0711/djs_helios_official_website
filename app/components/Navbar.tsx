@@ -1,0 +1,127 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
+
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navLinks = [
+  { name: "About", href: "#about" },
+  { name: "Hall of Fame", href: "#hall-of-fame" },
+  { name: "Archives", href: "#legacy" },
+  { name: "Partners", href: "#partners" },
+  { name: "Contact Us", href: "#contact" },
+];
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 px-4 py-4 md:px-8">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl bg-black/50 backdrop-blur-md border border-white/10 shadow-2xl">
+        
+        {/* Brand / Logo */}
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="relative w-10 h-10 rounded-xl bg-black/80 border border-amber-500/30 flex items-center justify-center p-1 group-hover:border-amber-400 group-hover:scale-105 transition-all">
+            <Image
+              src="/helios-logo.jpg"
+              alt="DJS Helios Official Logo"
+              width={36}
+              height={36}
+              className="object-contain"
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-extrabold tracking-wider text-white text-lg leading-none">
+              DJS HELIOS
+            </span>
+            <span className="text-[10px] text-amber-400 font-medium tracking-widest uppercase mt-1">
+              Solar Vehicle Team
+            </span>
+          </div>
+        </Link>
+
+        {/* Desktop Navigation Links */}
+        <nav className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.href}
+              className="text-sm font-medium text-slate-300 hover:text-amber-400 transition-colors"
+            >
+              {link.name}
+            </a>
+          ))}
+        </nav>
+
+        {/* Sponsor Us CTA Button */}
+        <div className="hidden md:block">
+          <a
+            href="#partners"
+            className="relative group overflow-hidden rounded-xl px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-semibold text-sm shadow-md shadow-amber-500/20 hover:shadow-amber-500/40 transition-all duration-300 flex items-center gap-2"
+          >
+            <span>Sponsor Us</span>
+            <svg
+              className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
+            </svg>
+          </a>
+        </div>
+
+        {/* Mobile Hamburger Toggle Button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden text-slate-300 hover:text-white focus:outline-none"
+          aria-label="Toggle Menu"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+      </div>
+
+      {/* Mobile Drawer Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="md:hidden mt-2 p-6 rounded-2xl bg-black/90 backdrop-blur-lg border border-white/10 flex flex-col gap-4 shadow-2xl"
+          >
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className="text-base font-medium text-slate-200 hover:text-amber-400 py-1 border-b border-white/5"
+              >
+                {link.name}
+              </a>
+            ))}
+            <a
+              href="#partners"
+              onClick={() => setIsOpen(false)}
+              className="mt-2 text-center py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-black font-semibold text-sm shadow-md shadow-amber-500/20"
+            >
+              Sponsor Us
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+}

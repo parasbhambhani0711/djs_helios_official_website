@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-helios-dark: #05070A;
+  --color-helios-card: #0D111A;
+  --color-helios-cardHover: #161B26;
+  --color-helios-amber: #F59E0B;
+  --color-helios-gold: #FBBF24;
+  --color-helios-cyan: #06B6D4;
+}
+
+.font-cursive {
+  font-family: 'Dancing Script', cursive;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-helios-dark);
+  color: #F8FAFC;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #05070A;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F59E0B;
+}
