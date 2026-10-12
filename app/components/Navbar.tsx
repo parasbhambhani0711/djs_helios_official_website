@@ -9,34 +9,36 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-  { name: "About", href: "#about" },
-  { name: "Hall of Fame", href: "#hall-of-fame" },
-  { name: "Archives", href: "#legacy" },
-  { name: "Partners", href: "#partners" },
-  { name: "Contact Us", href: "#contact" },
-];
+    { name: "About", href: "#about" },
+    { name: "Hall of Fame", href: "#hall-of-fame" },
+    { name: "Gallery", href: "#gallery" },
+    { name: "Partners", href: "#partners" },
+    { name: "Contact Us", href: "#contact" },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 px-4 py-4 md:px-8">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl bg-black/50 backdrop-blur-md border border-white/10 shadow-2xl">
         
-        {/* Brand / Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-10 h-10 rounded-xl bg-black/80 border border-amber-500/30 flex items-center justify-center p-1 group-hover:border-amber-400 group-hover:scale-105 transition-all">
+        {/* Brand / Logo - Stacked Typography Matching Brand Identity */}
+        <Link href="/" className="flex items-center gap-3.5 group">
+          <div className="relative w-11 h-11 rounded-full bg-black border border-white/20 flex items-center justify-center p-1 group-hover:border-amber-400 group-hover:scale-105 transition-all shadow-lg">
             <Image
               src="/helios-logo.jpg"
               alt="DJS Helios Official Logo"
-              width={36}
-              height={36}
+              width={40}
+              height={40}
               className="object-contain"
             />
           </div>
-          <div className="flex flex-col">
-            <span className="font-extrabold tracking-wider text-white text-lg leading-none">
-              DJS HELIOS
+
+          {/* Exact DJS / HELIOS Stacked Typography */}
+          <div className="flex flex-col font-helios justify-center leading-none">
+            <span className="font-extrabold text-white text-base md:text-lg tracking-[0.18em] uppercase">
+              DJS
             </span>
-            <span className="text-[10px] text-amber-400 font-medium tracking-widest uppercase mt-1">
-              Solar Vehicle Team
+            <span className="font-black text-amber-400 text-lg md:text-xl tracking-[0.12em] uppercase mt-0.5">
+              HELIOS
             </span>
           </div>
         </Link>

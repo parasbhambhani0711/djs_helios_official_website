@@ -9,6 +9,13 @@ export default function Contact() {
 
   const socials = [
     {
+      name: "LinkedIn",
+      handle: "DJS Helios",
+      link: "https://linkedin.com/company/djs-helios",
+      logo: "/socials/linkedin.png",
+      borderColor: "hover:border-blue-600/50",
+    },
+    {
       name: "Instagram",
       handle: "@djs_helios",
       link: "https://www.instagram.com/djs_helios/",
@@ -141,49 +148,49 @@ export default function Contact() {
             </motion.div>
 
             {/* Social Media Handles */}
-<motion.div
-  initial={{ opacity: 0, y: 15 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.4, delay: 0.2 }}
-  viewport={{ once: true }}
-  className="p-6 rounded-3xl bg-white/[0.02] border border-white/10"
->
-  <span className="text-xs text-slate-400 uppercase font-mono font-bold tracking-wider block mb-4">
-    Official Social Media Handles
-  </span>
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="p-6 rounded-3xl bg-white/[0.02] border border-white/10"
+            >
+              <span className="text-xs text-slate-400 uppercase font-mono font-bold tracking-wider block mb-4">
+                Official Social Media Handles
+              </span>
 
-  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-    {socials.map((social) => (
-      <a
-        key={social.name}
-        href={social.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 ${social.borderColor} flex items-center gap-3 transition-all duration-200 group`}
-      >
-        {/* Container with rounded clipping & mix-blend-multiply to remove white backgrounds */}
-        <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-white/10 flex items-center justify-center flex-shrink-0 border border-white/10 p-0.5">
-          <Image
-            src={social.logo}
-            alt={`${social.name} Logo`}
-            width={28}
-            height={28}
-            className="object-contain w-full h-full mix-blend-multiply"
-          />
-        </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {socials.map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 ${social.borderColor} flex items-center gap-3 transition-all duration-200 group`}
+                  >
+                    {/* Container with rounded clipping & mix-blend-multiply to remove white backgrounds */}
+                    <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-white/10 flex items-center justify-center flex-shrink-0 border border-white/10 p-0.5">
+                      <Image
+                        src={social.logo}
+                        alt={`${social.name} Logo`}
+                        width={28}
+                        height={28}
+                        className="object-contain w-full h-full mix-blend-multiply"
+                      />
+                    </div>
 
-        <div className="flex flex-col min-w-0">
-          <span className="text-white font-bold text-xs truncate">
-            {social.name}
-          </span>
-          <span className="text-[11px] text-slate-400 font-mono truncate group-hover:text-amber-300 transition-colors">
-            {social.handle}
-          </span>
-        </div>
-      </a>
-    ))}
-  </div>
-</motion.div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-white font-bold text-xs truncate">
+                        {social.name}
+                      </span>
+                      <span className="text-[11px] text-slate-400 font-mono truncate group-hover:text-amber-300 transition-colors">
+                        {social.handle}
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </motion.div>
 
           </div>
 

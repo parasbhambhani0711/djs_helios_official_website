@@ -10,6 +10,12 @@
   --color-helios-cyan: #06B6D4;
 }
 
+@layer utilities {
+  .font-helios {
+    font-family: var(--font-helios), sans-serif;
+  }
+}
+
 .font-cursive {
   font-family: 'Dancing Script', cursive;
 }
