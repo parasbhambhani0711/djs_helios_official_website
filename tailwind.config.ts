@@ -10,12 +10,11 @@ const config: Config = {
     extend: {
       colors: {
         helios: {
-          dark: "#05070A",       // Pitch black background
+          dark: "#0B0F17",       // Deep Carbon Charcoal
           card: "#0D111A",       // Glass card surface
           cardHover: "#161B26",  // Hover elevation
-          amber: "#F59E0B",      // Solar golden yellow
-          gold: "#FBBF24",       // Energy accent glow
-          cyan: "#06B6D4",       // Technical spec highlights
+          amber: "#F59E0B",      // Solar Amber
+          emerald: "#10B981",    // Cyber Emerald
         },
       },
     },

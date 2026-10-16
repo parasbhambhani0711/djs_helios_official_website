@@ -4,14 +4,14 @@ import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-type SubTab = "achievements" | "timeline" | "media";
+type SubTab = "timeline" | "achievements" | "media";
 
 interface AchievementItem {
   id: string;
   year: string;
+  yearNode: string;
   title: string;
   category: string;
-  image: string;
   highlight: string;
   description: string;
   bullets: string[];
@@ -42,24 +42,24 @@ const ACHIEVEMENTS: AchievementItem[] = [
   {
     id: "sevc-2026",
     year: "2026",
+    yearNode: "2026",
     title: "Solar Electric Vehicle Championship (SEVC 2026)",
     category: "Overall & Merit Excellence",
-    image: "/hall-of-fame/achievements/2026.jpg",
     highlight: "5th Rank Overall",
     description: "Competed at Coimbatore, Tamil Nadu in the Battery Electric Vehicle category against top national institutes.",
     bullets: [
-      "5th Rank Overall (Battery Electric Vehicle)",
-      "2nd Rank in Business Plan",
-      "3rd Rank in Innovation Round",
+      "5th Rank Overall (Battery Electric Vehicle Category)",
+      "2nd Rank in Business Plan Presentation",
+      "3rd Rank in Engineering Innovation Round",
       "Flawless dynamic track & technical scrutiny clearance",
     ],
   },
   {
     id: "sevc-bsvc-2025",
     year: "2024 - 2025",
+    yearNode: "2025",
     title: "SEVC 2025 & BSVC 2024 National Campaigns",
     category: "Endurance & Speed",
-    image: "/hall-of-fame/achievements/2025.jpg",
     highlight: "AIR 5 (SEVC) / AIR 6 (BSVC)",
     description: "Demonstrated consistent national top-10 finishes across consecutive competition seasons.",
     bullets: [
@@ -71,9 +71,9 @@ const ACHIEVEMENTS: AchievementItem[] = [
   {
     id: "esvc-2019",
     year: "2019",
+    yearNode: "2019",
     title: "Electric Solar Vehicle Championship (ESVC 2019)",
     category: "Defending Champions",
-    image: "/hall-of-fame/achievements/2019.jpg",
     highlight: "AIR 7 Out of 120 Teams",
     description: "Returned as defending champions to compete against teams from all across Asia with Version 03 (The Defender).",
     bullets: [
@@ -86,9 +86,9 @@ const ACHIEVEMENTS: AchievementItem[] = [
   {
     id: "esvc-2018",
     year: "2018",
+    yearNode: "2018",
     title: "ESVC 2018 — Crowned 'Champions of Asia'",
     category: "Asian Champions",
-    image: "/hall-of-fame/achievements/2018-esvc.jpg",
     highlight: "Champions of Asia 2018",
     description: "Achieved a quantum leap outperforming ~120 teams to claim the overall Asian Championship title.",
     bullets: [
@@ -102,9 +102,9 @@ const ACHIEVEMENTS: AchievementItem[] = [
   {
     id: "iasc-2018",
     year: "2018",
+    yearNode: "2018",
     title: "Indo Asian Solar Challenge (IASC 2018)",
     category: "Dual Title Victory",
-    image: "/hall-of-fame/achievements/2018-iasc.jpg",
     highlight: "Champions of IASC 2018",
     description: "Became the ONLY student team ever to hold both the ESVC and IASC Overall Champions titles simultaneously.",
     bullets: [
@@ -117,9 +117,9 @@ const ACHIEVEMENTS: AchievementItem[] = [
   {
     id: "esvc-2017",
     year: "2017",
+    yearNode: "2017",
     title: "ESVC 2017 — Debut Competition Run",
     category: "Pioneer Entry",
-    image: "/hall-of-fame/achievements/2017.jpg",
     highlight: "Go Green Award Winner",
     description: "Designed and manufactured Version 01, our very first competitive vehicle in team history.",
     bullets: [
@@ -199,7 +199,22 @@ const PAST_CARS: CarItem[] = [
   },
 ];
 
-const MEDIA_COVERAGE: MediaItem[] = [
+const FEATURED_MEDIA: MediaItem = {
+  id: "news2",
+  outlet: "State Leadership Showcase",
+  headline: "DJS Helios Solar Innovation Presented to State Leadership",
+  date: "2018",
+  badge: "Dignitary Recognition",
+  image: "/hall-of-fame/media/news2.jpg",
+  summary: "Team DJS Helios presenting their custom solar vehicle technology and championship trophies directly to Maharashtra State Leadership at an official tech summit.",
+  highlights: [
+    "Honored by Chief Minister Devendra Fadnavis at state tech showcase",
+    "Recognized for pioneering student EV research in Maharashtra",
+    "Demonstrated custom solar array & chassis innovation",
+  ],
+};
+
+const GRID_MEDIA: MediaItem[] = [
   {
     id: "news1",
     outlet: "National Educational Press",
@@ -212,20 +227,6 @@ const MEDIA_COVERAGE: MediaItem[] = [
       "Built by 25 DJSCE students in 9 months without external equipment",
       "Dual solar & electrical simultaneous charge-and-drive system",
       "Promoted Make in India mission for affordable clean mobility",
-    ],
-  },
-  {
-    id: "news2",
-    outlet: "State Leadership Showcase",
-    headline: "DJS Helios Solar Innovation Presented to State Leadership",
-    date: "2018",
-    badge: "Dignitary Recognition",
-    image: "/hall-of-fame/media/news2.jpg",
-    summary: "Team DJS Helios presenting their custom solar vehicle technology and championship trophies directly to Maharashtra State Leadership at an official tech summit.",
-    highlights: [
-      "Honored by Chief Minister Devendra Fadnavis at state tech showcase",
-      "Recognized for pioneering student EV research in Maharashtra",
-      "Demonstrated custom solar array & chassis innovation",
     ],
   },
   {
@@ -275,12 +276,12 @@ const MEDIA_COVERAGE: MediaItem[] = [
 const YEAR_FILTERS = ["All", "2026", "2024 - 2025", "2019", "2018", "2017"];
 
 export default function HallOfFame() {
-  const [activeTab, setActiveTab] = useState<SubTab>("achievements");
+  const [activeTab, setActiveTab] = useState<SubTab>("timeline");
   const [selectedYear, setSelectedYear] = useState<string>("All");
 
   const filteredAchievements = selectedYear === "All"
     ? ACHIEVEMENTS
-    : ACHIEVEMENTS.filter((a) => a.year === selectedYear);
+    : ACHIEVEMENTS.filter((a) => a.year.includes(selectedYear));
 
   return (
     <section id="hall-of-fame" className="py-20 md:py-24 px-4 md:px-8 bg-helios-dark relative border-t border-white/5 overflow-hidden">
@@ -307,17 +308,6 @@ export default function HallOfFame() {
         <div className="flex justify-center mb-10">
           <div className="inline-flex p-1.5 rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-md overflow-x-auto max-w-full">
             <button
-              onClick={() => setActiveTab("achievements")}
-              className={`px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-xs md:text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2 ${
-                activeTab === "achievements"
-                  ? "bg-gradient-to-r from-amber-400 to-amber-500 text-black shadow-lg shadow-amber-500/20"
-                  : "text-slate-400 hover:text-white"
-              }`}
-            >
-              <span>🏆 Achievements & Trophies</span>
-            </button>
-
-            <button
               onClick={() => setActiveTab("timeline")}
               className={`px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-xs md:text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2 ${
                 activeTab === "timeline"
@@ -326,6 +316,17 @@ export default function HallOfFame() {
               }`}
             >
               <span>🏎️ Timeline & Past Cars</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("achievements")}
+              className={`px-4 md:px-6 py-2.5 md:py-3 rounded-xl font-bold text-xs md:text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2 ${
+                activeTab === "achievements"
+                  ? "bg-gradient-to-r from-amber-400 to-amber-500 text-black shadow-lg shadow-amber-500/20"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              <span>🏆 Achievements & Trophies</span>
             </button>
 
             <button
@@ -343,115 +344,9 @@ export default function HallOfFame() {
 
         {/* Dynamic Sub-Tab Content */}
         <AnimatePresence mode="wait">
-          {activeTab === "achievements" && (
-            
-            /* TAB 1: YEAR-WISE ACHIEVEMENTS SHOWCASE */
-            <motion.div
-              key="achievements"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.3 }}
-              className="space-y-8"
-            >
-              {/* Year Filter Pills Bar */}
-              <div className="flex flex-wrap items-center justify-center gap-2.5 mb-8">
-                {YEAR_FILTERS.map((year) => {
-                  const isSelected = selectedYear === year;
-                  return (
-                    <button
-                      key={year}
-                      onClick={() => setSelectedYear(year)}
-                      className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all border ${
-                        isSelected
-                          ? "bg-amber-500 text-black border-amber-400 shadow-md shadow-amber-500/20"
-                          : "bg-white/[0.02] text-slate-300 border-white/10 hover:border-amber-400/40 hover:bg-white/[0.05]"
-                      }`}
-                    >
-                      {year === "All" ? "ALL SEASONS" : `${year} SEASON`}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Achievements Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                {filteredAchievements.map((item) => (
-                  <motion.div
-                    key={item.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                    className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-amber-500/40 transition-all group flex flex-col justify-between"
-                  >
-                    <div>
-                      {/* Image Header with Year & Highlight Badges */}
-                      <div className="relative w-full aspect-[16/9] bg-black/80 border-b border-white/5 overflow-hidden flex items-center justify-center">
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                          onError={(e) => {
-                            const target = e.target as HTMLElement;
-                            target.style.display = "none";
-                          }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                        
-                        <div className="absolute top-4 left-4">
-                          <span className="px-3 py-1 rounded-full bg-black/90 border border-amber-500/40 text-amber-300 text-xs font-mono font-bold backdrop-blur-md">
-                            🏆 {item.highlight}
-                          </span>
-                        </div>
-
-                        <div className="absolute top-4 right-4">
-                          <span className="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/30 text-amber-400 text-xs font-mono font-bold">
-                            {item.year}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Achievement Details */}
-                      <div className="p-6 md:p-8">
-                        <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider block mb-2">
-                          {item.category}
-                        </span>
-                        <h3 className="text-lg md:text-2xl font-black text-white mb-3 group-hover:text-amber-400 transition-colors">
-                          {item.title}
-                        </h3>
-                        <p className="text-slate-300 text-xs md:text-sm leading-relaxed font-medium mb-4">
-                          {item.description}
-                        </p>
-
-                        {/* Bullet Highlights */}
-                        <ul className="space-y-2 pt-3 border-t border-white/5">
-                          {item.bullets.map((bullet, idx) => (
-                            <li key={idx} className="flex items-start gap-2 text-xs md:text-sm text-slate-200 font-medium">
-                              <span className="text-amber-400 font-bold">⚡</span>
-                              <span>{bullet}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div className="px-6 pb-6 pt-0">
-                      <div className="pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-slate-500">
-                        <span>VERIFIED DJS HELIOS TROPHY</span>
-                        <span className="text-amber-400">{item.year} SEASON</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
           {activeTab === "timeline" && (
             
-            /* TAB 2: TIMELINE (PAST CARS) */
+            /* TAB 1: TIMELINE (PAST CARS) */
             <motion.div
               key="timeline"
               initial={{ opacity: 0, y: 15 }}
@@ -460,7 +355,6 @@ export default function HallOfFame() {
               transition={{ duration: 0.3 }}
               className="relative max-w-6xl mx-auto"
             >
-              {/* Vertical Thread */}
               <div className="absolute left-4 md:left-1/2 top-4 bottom-4 w-1 bg-gradient-to-b from-amber-500/80 via-amber-400/40 to-emerald-400/80 -translate-x-1/2 rounded-full" />
 
               <div className="flex flex-col gap-12 md:gap-20 relative">
@@ -555,89 +449,258 @@ export default function HallOfFame() {
             </motion.div>
           )}
 
+          {activeTab === "achievements" && (
+            
+            /* TAB 2: ACHIEVEMENTS TIMELINE WITH YEAR BADGES DIRECTLY ON TIMELINE NODE */
+            <motion.div
+              key="achievements"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-8 max-w-5xl mx-auto relative"
+            >
+              {/* Year Filter Pills Bar */}
+              <div className="flex flex-wrap items-center justify-center gap-2.5 mb-10">
+                {YEAR_FILTERS.map((year) => {
+                  const isSelected = selectedYear === year;
+                  return (
+                    <button
+                      key={year}
+                      onClick={() => setSelectedYear(year)}
+                      className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all border ${
+                        isSelected
+                          ? "bg-amber-500 text-black border-amber-400 shadow-md shadow-amber-500/20"
+                          : "bg-white/[0.02] text-slate-300 border-white/10 hover:border-amber-400/40 hover:bg-white/[0.05]"
+                      }`}
+                    >
+                      {year === "All" ? "ALL SEASONS" : `${year} SEASON`}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Achievements Vertical Timeline Stream */}
+              <div className="relative pl-14 md:pl-20 space-y-10 md:space-y-12">
+                {/* Vertical Timeline Thread Line */}
+                <div className="absolute left-5 md:left-7 top-3 bottom-3 w-0.5 bg-gradient-to-b from-amber-400 via-emerald-400/60 to-amber-500/30 rounded-full" />
+
+                {filteredAchievements.map((item, index) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.4, delay: index * 0.08 }}
+                    className="relative group"
+                  >
+                    {/* Year Badge Positioned DIRECTLY on Left Timeline Line */}
+                    <div className="absolute left-[-36px] md:left-[-52px] top-6 z-20">
+                      <span className="px-2.5 md:px-3 py-1 rounded-full bg-amber-500 text-black font-mono font-black text-[10px] md:text-xs shadow-md shadow-amber-500/30 border border-amber-300 flex items-center justify-center whitespace-nowrap">
+                        {item.yearNode}
+                      </span>
+                    </div>
+
+                    {/* Timeline Content Card */}
+                    <div className="p-6 md:p-8 rounded-3xl bg-white/[0.02] border border-white/10 hover:border-amber-500/40 transition-all duration-300 shadow-2xl backdrop-blur-xl">
+                      
+                      {/* Top Badges & Meta Row */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                        <div className="flex items-center gap-2">
+                          <span className="px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-mono font-bold backdrop-blur-md">
+                            🏆 {item.highlight}
+                          </span>
+                          <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold">
+                            {item.category}
+                          </span>
+                        </div>
+
+                        <span className="px-3 py-1 rounded-xl bg-white/[0.05] border border-white/10 text-amber-400 text-xs font-mono font-extrabold">
+                          {item.year} SEASON
+                        </span>
+                      </div>
+
+                      {/* Main Title & Description */}
+                      <h3 className="text-xl md:text-3xl font-black text-white group-hover:text-amber-400 transition-colors mb-2">
+                        {item.title}
+                      </h3>
+
+                      <p className="text-slate-300 text-xs md:text-sm leading-relaxed font-medium mb-6">
+                        {item.description}
+                      </p>
+
+                      {/* Bullet Highlights Grid */}
+                      <div className="pt-4 border-t border-white/5 grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {item.bullets.map((bullet, idx) => (
+                          <div key={idx} className="flex items-start gap-2.5 p-2.5 rounded-xl bg-black/40 border border-white/5">
+                            <span className="text-amber-400 font-bold text-xs">⚡</span>
+                            <span className="text-slate-200 text-xs md:text-sm font-medium leading-snug">
+                              {bullet}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Card Footer Tag */}
+                      <div className="mt-5 pt-3 border-t border-white/5 flex items-center justify-between text-[10px] md:text-[11px] font-mono text-slate-500">
+                        <span>OFFICIAL COMPETITION MILESTONE</span>
+                        <span className="text-emerald-400 font-bold">VERIFIED AWARD</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
           {activeTab === "media" && (
 
-            /* TAB 3: MEDIA & PRESS COVERAGE SHOWCASE */
+            /* TAB 3: MEDIA COVERAGE (1 HERO FEATURE + 4 GRID CARDS = PERFECT 5-CARD LAYOUT) */
             <motion.div
               key="media"
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
+              className="space-y-8 max-w-6xl mx-auto"
             >
-              {MEDIA_COVERAGE.map((news, index) => (
-                <motion.div
-                  key={news.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.08 }}
-                  viewport={{ once: true }}
-                  className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-amber-500/40 transition-all group flex flex-col justify-between"
-                >
+              {/* 1. TOP FEATURED HERO PRESS BANNER (CARD 1) */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="rounded-3xl bg-white/[0.02] border border-white/10 hover:border-amber-500/40 transition-all group overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-12"
+              >
+                <div className="relative md:col-span-6 aspect-[16/10] md:aspect-auto bg-black/90 min-h-[260px]">
+                  <Image
+                    src={FEATURED_MEDIA.image}
+                    alt={FEATURED_MEDIA.headline}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      const target = e.target as HTMLElement;
+                      target.style.display = "none";
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                  
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3.5 py-1.5 rounded-full bg-black/80 border border-amber-500/40 text-amber-400 text-xs font-mono font-bold backdrop-blur-md">
+                      📰 {FEATURED_MEDIA.outlet}
+                    </span>
+                  </div>
+
+                  <div className="absolute top-4 right-4">
+                    <span className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-slate-200 text-xs font-mono font-bold backdrop-blur-md">
+                      {FEATURED_MEDIA.date}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-6 md:p-8 md:col-span-6 flex flex-col justify-between">
                   <div>
-                    {/* Media Clipping Image Tile */}
-                    <div className="relative w-full aspect-[4/3] bg-black/90 border-b border-white/5 overflow-hidden">
-                      <Image
-                        src={news.image}
-                        alt={news.headline}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500 filter brightness-95 group-hover:brightness-100"
-                        onError={(e) => {
-                          const target = e.target as HTMLElement;
-                          target.style.display = "none";
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                    <span className="px-3 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold inline-block mb-3">
+                      ⭐ LEAD FEATURE ARTICLE
+                    </span>
 
-                      {/* Outlet & Year Tags */}
-                      <div className="absolute top-3 left-3 flex items-center gap-2">
-                        <span className="px-3 py-1 rounded-full bg-black/80 border border-amber-500/30 text-amber-400 text-[11px] font-mono font-bold backdrop-blur-md">
-                          📰 {news.outlet}
-                        </span>
-                      </div>
+                    <h3 className="text-xl md:text-2xl font-black text-white mb-3 group-hover:text-amber-400 transition-colors leading-snug">
+                      {FEATURED_MEDIA.headline}
+                    </h3>
 
-                      <div className="absolute top-3 right-3">
-                        <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/20 text-slate-200 text-[10px] font-mono font-bold backdrop-blur-md">
-                          {news.date}
-                        </span>
-                      </div>
-                    </div>
+                    <p className="text-slate-300 text-xs md:text-sm leading-relaxed font-medium mb-5">
+                      {FEATURED_MEDIA.summary}
+                    </p>
 
-                    {/* Article Details */}
-                    <div className="p-6">
-                      <span className="px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-bold inline-block mb-3">
-                        {news.badge}
-                      </span>
-
-                      <h3 className="text-lg font-black text-white mb-2.5 group-hover:text-amber-400 transition-colors leading-snug">
-                        {news.headline}
-                      </h3>
-
-                      <p className="text-slate-300 text-xs leading-relaxed font-medium mb-4">
-                        {news.summary}
-                      </p>
-
-                      {/* Quick Takeaway Bullets */}
-                      <ul className="space-y-1.5 pt-3 border-t border-white/5">
-                        {news.highlights.map((point, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-[11px] text-slate-300">
-                            <span className="text-amber-400 font-bold">•</span>
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    <ul className="space-y-2 pt-3 border-t border-white/5">
+                      {FEATURED_MEDIA.highlights.map((point, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-xs text-slate-200">
+                          <span className="text-amber-400 font-bold">•</span>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
-                  <div className="p-6 pt-0">
-                    <div className="pt-3 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-500">
-                      <span>PRESS ARCHIVE</span>
-                      <span className="text-amber-400/90 font-bold">VERIFIED ARTICLE</span>
-                    </div>
+                  <div className="mt-6 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-slate-500">
+                    <span>STATE LEADERSHIP SUMMIT</span>
+                    <span className="text-amber-400 font-bold">VERIFIED COVERAGE</span>
                   </div>
-                </motion.div>
-              ))}
+                </div>
+              </motion.div>
+
+              {/* 2. BALANCED 2-COLUMN GRID FOR REMAINING 4 PRESS CARDS */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                {GRID_MEDIA.map((news, index) => (
+                  <motion.div
+                    key={news.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.08 }}
+                    viewport={{ once: true }}
+                    className="rounded-3xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-amber-500/40 transition-all group flex flex-col justify-between"
+                  >
+                    <div>
+                      {/* Media Clipping Image Tile */}
+                      <div className="relative w-full aspect-[16/9] bg-black/90 border-b border-white/5 overflow-hidden">
+                        <Image
+                          src={news.image}
+                          alt={news.headline}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-500 filter brightness-95 group-hover:brightness-100"
+                          onError={(e) => {
+                            const target = e.target as HTMLElement;
+                            target.style.display = "none";
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+
+                        <div className="absolute top-3 left-3">
+                          <span className="px-3 py-1 rounded-full bg-black/80 border border-amber-500/30 text-amber-400 text-[11px] font-mono font-bold backdrop-blur-md">
+                            📰 {news.outlet}
+                          </span>
+                        </div>
+
+                        <div className="absolute top-3 right-3">
+                          <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/20 text-slate-200 text-[10px] font-mono font-bold backdrop-blur-md">
+                            {news.date}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Article Details */}
+                      <div className="p-6">
+                        <span className="px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-mono font-bold inline-block mb-3">
+                          {news.badge}
+                        </span>
+
+                        <h3 className="text-lg font-black text-white mb-2.5 group-hover:text-amber-400 transition-colors leading-snug">
+                          {news.headline}
+                        </h3>
+
+                        <p className="text-slate-300 text-xs leading-relaxed font-medium mb-4">
+                          {news.summary}
+                        </p>
+
+                        <ul className="space-y-1.5 pt-3 border-t border-white/5">
+                          {news.highlights.map((point, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-[11px] text-slate-300">
+                              <span className="text-amber-400 font-bold">•</span>
+                              <span>{point}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="p-6 pt-0">
+                      <div className="pt-3 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-slate-500">
+                        <span>PRESS ARCHIVE</span>
+                        <span className="text-amber-400/90 font-bold">VERIFIED ARTICLE</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

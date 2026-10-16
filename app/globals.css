@@ -2,12 +2,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-helios-dark: #05070A;
-  --color-helios-card: #0D111A;
-  --color-helios-cardHover: #161B26;
-  --color-helios-amber: #F59E0B;
-  --color-helios-gold: #FBBF24;
-  --color-helios-cyan: #06B6D4;
+  --color-helios-dark: #0B0F17;      /* Deep Carbon Charcoal */
+  --color-helios-card: #0D111A;      /* Glass Card Background */
+  --color-helios-cardHover: #161B26; /* Card Hover Elevation */
+  --color-helios-amber: #F59E0B;     /* Solar Amber */
+  --color-helios-emerald: #10B981;   /* Cyber Emerald */
+  --color-helios-gold: #FBBF24;      /* Energy Glow Accent */
+  --color-helios-cyan: #06B6D4;      /* Telemetry Spec Highlight */
 }
 
 @layer utilities {
@@ -35,12 +36,12 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #05070A;
+  background: #0B0F17;
 }
 ::-webkit-scrollbar-thumb {
   background: #1E293B;

@@ -13,6 +13,7 @@ export default function Navbar() {
     { name: "Hall of Fame", href: "#hall-of-fame" },
     { name: "Gallery", href: "#gallery" },
     { name: "Partners", href: "#partners" },
+    { name: "Support Us", href: "#support" },
     { name: "Contact Us", href: "#contact" },
   ];
 
@@ -56,29 +57,6 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Sponsor Us CTA Button */}
-        <div className="hidden md:block">
-          <a
-            href="#partners"
-            className="relative group overflow-hidden rounded-xl px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-semibold text-sm shadow-md shadow-amber-500/20 hover:shadow-amber-500/40 transition-all duration-300 flex items-center gap-2"
-          >
-            <span>Sponsor Us</span>
-            <svg
-              className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
-          </a>
-        </div>
-
         {/* Mobile Hamburger Toggle Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -114,13 +92,6 @@ export default function Navbar() {
                 {link.name}
               </a>
             ))}
-            <a
-              href="#partners"
-              onClick={() => setIsOpen(false)}
-              className="mt-2 text-center py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-black font-semibold text-sm shadow-md shadow-amber-500/20"
-            >
-              Sponsor Us
-            </a>
           </motion.div>
         )}
       </AnimatePresence>

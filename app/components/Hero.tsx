@@ -9,6 +9,7 @@ export default function Hero() {
     { text: "Helios", delay: 0.7 },
   ];
 
+
   const heroNavTabs = [
     { num: "01", name: "ABOUT", href: "#about" },
     { num: "02", name: "HALL OF FAME", href: "#hall-of-fame" },

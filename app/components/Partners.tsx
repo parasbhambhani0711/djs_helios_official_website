@@ -142,7 +142,7 @@ export default function Partners() {
 
           {/* 6th Slot: Interactive "Become Our Partner" Card */}
           <motion.a
-            href="#contact"
+            href="#contact-form"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.4 }}

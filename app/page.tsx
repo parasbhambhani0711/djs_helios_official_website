@@ -4,6 +4,7 @@ import About from "./components/About";
 import HallOfFame from "./components/HallOfFame";
 import Gallery from "./components/Gallery";
 import Partners from "./components/Partners";
+import SupportUs from "./components/SupportUs";
 import Contact from "./components/Contact";
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
       <HallOfFame />
       <Gallery />
       <Partners />
+      <SupportUs />
       <Contact />
     </main>
   );
