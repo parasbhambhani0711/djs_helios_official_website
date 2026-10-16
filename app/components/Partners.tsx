@@ -14,7 +14,7 @@ const SPONSORS: Sponsor[] = [
   {
     name: "Waaree Energies",
     role: "Official Solar PV Partner",
-    logo: "/sponsors/waaree.png",
+    logo: "/sponsors/waaree-logo.png",
     description: "For enabling sustainable mobility through advanced solar panels for our vehicle development.",
   },
   {
