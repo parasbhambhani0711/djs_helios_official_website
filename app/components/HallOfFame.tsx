@@ -175,7 +175,7 @@ const PAST_CARS: CarItem[] = [
     version: "v2",
     name: "Merlin (Version 02)",
     year: "2018",
-    image: "/hall-of-fame/timeline/2018.jpg",
+    image: "/hall-of-fame/timeline/2018.png",
     status: "Dual Champions (ESVC & IASC)",
     specs: [
       { label: "Titles", value: "Champions of Asia" },
@@ -221,7 +221,7 @@ const GRID_MEDIA: MediaItem[] = [
     headline: "25 Engineering Students Build Zero-Emission Solar Car in 9 Months",
     date: "2017",
     badge: "Make In India Pioneer",
-    image: "/hall-of-fame/media/news1.jpg",
+    image: "/hall-of-fame/media/news1.png",
     summary: "Featured DJSCE Mechanical, Electronics & Production students for constructing a dual-charging 45 km/h solar vehicle without ready-made imported equipment.",
     highlights: [
       "Built by 25 DJSCE students in 9 months without external equipment",
@@ -235,7 +235,7 @@ const GRID_MEDIA: MediaItem[] = [
     headline: "Runs on Solar & Electricity: Mumbai's First Student Solar Automobile",
     date: "2017",
     badge: "FPJ Special Feature",
-    image: "/hall-of-fame/media/news3.jpg",
+    image: "/hall-of-fame/media/news3.png",
     summary: "Highlighted DJS Helios as the first engineering group from Mumbai to build a dual-powered electric solar car capable of an 80 km operational radius.",
     highlights: [
       "First engineering team from Mumbai to build a dual solar-electric vehicle",
@@ -249,7 +249,7 @@ const GRID_MEDIA: MediaItem[] = [
     headline: "DJS Helios Wins International Accolades & Sweeps Dual Championships",
     date: "2018",
     badge: "DNA National Press",
-    image: "/hall-of-fame/media/news4.jpg",
+    image: "/hall-of-fame/media/news4.png",
     summary: "Covered DJS Helios dominating both the Indo Asian Solar Challenge (IASC 2018) and ESVC 2018 to establish Asia-Pacific student leadership.",
     highlights: [
       "Covered DJS Helios winning IASC 2018 & ESVC 2018 titles",
@@ -263,7 +263,7 @@ const GRID_MEDIA: MediaItem[] = [
     headline: "Futuristic Clean Mobility: Student Solar Vehicle Achieving 45 km/h Speed",
     date: "2017 - 2018",
     badge: "Regional Tech Feature",
-    image: "/hall-of-fame/media/news5.jpg",
+    image: "/hall-of-fame/media/news5.png",
     summary: "Detailed regional coverage analyzing the structural cost-efficiency, 4-hour solar charging time, and battery power controller developed by DJS Helios.",
     highlights: [
       "Detailed 4-hour solar vs 1-hour electrical charging dynamics",

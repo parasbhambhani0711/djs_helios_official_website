@@ -9,7 +9,6 @@ export default function Hero() {
     { text: "Helios", delay: 0.7 },
   ];
 
-
   const heroNavTabs = [
     { num: "01", name: "ABOUT", href: "#about" },
     { num: "02", name: "HALL OF FAME", href: "#hall-of-fame" },
@@ -25,12 +24,12 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative w-full h-screen min-h-[720px] flex flex-col justify-between items-center text-center overflow-hidden bg-helios-dark">
+    <section id="hero" className="relative w-full h-screen min-h-[720px] flex flex-col justify-between items-center text-center overflow-hidden bg-helios-dark">
       
       {/* 1. Full-Screen Track Canvas with Layered Vignette & Ambient Beams */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/gallery/hero-track-jpg.jpeg"
+          src="/gallery/hero-track.png"
           alt="DJS Helios Race Vehicle"
           fill
           quality={95}
@@ -99,7 +98,7 @@ export default function Hero() {
           />
         </motion.div>
 
-        {/* Animated Brand Title with High-Glow Typography */}
+        {/* Animated Brand Title with Big Shoulders Display Bold Typography */}
         <div className="flex flex-wrap items-center justify-center gap-3 md:gap-5 my-1 overflow-visible">
           {brandWords.map((wordObj, wordIdx) => (
             <div key={wordIdx} className="flex overflow-visible">
@@ -113,7 +112,7 @@ export default function Hero() {
                     delay: wordObj.delay + charIdx * 0.08,
                     ease: "easeOut",
                   }}
-                  className="font-cursive text-6xl sm:text-7xl md:text-9xl text-amber-300 leading-tight px-0.5 drop-shadow-[0_0_35px_rgba(251,191,36,0.7)] hover:text-amber-200 transition-colors cursor-default"
+                  className="font-big-shoulders font-black uppercase text-6xl sm:text-8xl md:text-9xl text-amber-300 leading-none tracking-wider px-0.5 drop-shadow-[0_0_35px_rgba(251,191,36,0.7)] hover:text-amber-200 transition-colors cursor-default"
                 >
                   {char}
                 </motion.span>

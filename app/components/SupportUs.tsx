@@ -1,433 +1,521 @@
-"use client";
+// components/SupportUs.tsx
+'use client';
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Wrench,
+  Truck,
+  ShieldCheck,
+  Factory,
+  Cpu,
+  HeartHandshake,
+  ArrowRight,
+  CheckCircle2,
+  Send,
+  Sparkles,
+  Compass,
+  Zap,
+  Users,
+  ChevronDown
+} from 'lucide-react';
 
-const WISHLIST = [
+// --- TYPES ---
+export type PartnershipCategory =
+  | 'Technical Partner'
+  | 'Logistics Partner'
+  | 'Safety Partner'
+  | 'Manufacturing Partner'
+  | 'Electronics & Data Partner'
+  | 'Crowdfunding / General Support'
+  | 'Multiple Categories / Other';
+
+interface CategoryData {
+  id: string;
+  categoryName: PartnershipCategory;
+  title: string;
+  tagline: string;
+  description: string;
+  highlights: string[];
+  ctaText: string;
+  icon: React.ElementType;
+}
+
+// --- CATEGORIES DATA ---
+const CATEGORIES: CategoryData[] = [
   {
-    title: "Mechanical",
-    icon: "⚙️",
-    accent: "amber",
-    items: [
-      "Advanced fabrication & machining support",
-      "Access to precision testing & calibration rigs",
-      "Structural design validation & optimization",
-      "Manufacturing guidance & prototype reviews",
-    ],
+    id: 'technical',
+    categoryName: 'Technical Partner',
+    title: 'Technical Partner',
+    tagline: 'Mentorship & Software',
+    description: 'CAD/CAE licenses, simulation tools, and expert technical guidance during vehicle development.',
+    highlights: ['Software Licences', 'CAE & Simulation', 'Engineering Mentorship'],
+    ctaText: 'Partner in Tech',
+    icon: Wrench
   },
   {
-    title: "Electronics",
-    icon: "⚡",
-    accent: "emerald",
-    items: [
-      "Solar PV array & telemetry collaboration",
-      "Power systems, BMS & safety resources",
-      "Lab access for electrical testing & tuning",
-      "High-efficiency motor & drive controllers",
-    ],
+    id: 'manufacturing',
+    categoryName: 'Manufacturing Partner',
+    title: 'Manufacturing Partner',
+    tagline: 'Fabrication & Hardware',
+    description: 'CNC machining, precision welding, workshop access, and raw materials for solar vehicle chassis.',
+    highlights: ['CNC Machining', 'Workshop Access', 'Raw Materials'],
+    ctaText: 'Build With Us',
+    icon: Factory
   },
   {
-    title: "Coding & Software",
-    icon: "💻",
-    accent: "amber",
-    items: [
-      "Software / tools access & licenses (ANSYS, CAD)",
-      "Mentorship on motor control & IoT telemetry",
-      "CI / testing infrastructure assistance",
-      "Embedded C / C++ & cloud pipeline support",
-    ],
+    id: 'electronics',
+    categoryName: 'Electronics & Data Partner',
+    title: 'Electronics & Data',
+    tagline: 'Telemetry & Embedded Systems',
+    description: 'Telemetry, microcontrollers, sensors, and real-time data analytics tools for battery & motor systems.',
+    highlights: ['Sensors & Telemetry', 'Embedded Systems', 'Testing Gear'],
+    ctaText: 'Power Our Tech',
+    icon: Cpu
   },
   {
-    title: "Marketing & Outreach",
-    icon: "📣",
-    accent: "emerald",
-    items: [
-      "Brand & content collaboration",
-      "Media partnerships & press coverage",
-      "Event presence & promotional engagement",
-      "Digital outreach & public relations support",
-    ],
+    id: 'logistics',
+    categoryName: 'Logistics Partner',
+    title: 'Logistics Partner',
+    tagline: 'Transport & Storage',
+    description: 'Vehicle freight, material shipping, and event transportation support for national competitions.',
+    highlights: ['Vehicle Freight', 'Material Shipping', 'Event Transport'],
+    ctaText: 'Support Logistics',
+    icon: Truck
   },
+  {
+    id: 'safety',
+    categoryName: 'Safety Partner',
+    title: 'Safety Partner',
+    tagline: 'High-Voltage & PPE',
+    description: 'Personal protective equipment, high-voltage isolation gear, and safety inspection protocols.',
+    highlights: ['High-Voltage PPE', 'Safety Testing', 'Inspection Tools'],
+    ctaText: 'Support Safety',
+    icon: ShieldCheck
+  },
+  {
+    id: 'crowdfunding',
+    categoryName: 'Crowdfunding / General Support',
+    title: 'Crowdfunding & General',
+    tagline: 'Direct Backing',
+    description: 'Monetary contributions, alumni grants, equipment donations, and community-driven funding.',
+    highlights: ['Individual Grants', 'Alumni Backing', 'Equipment Donations'],
+    ctaText: 'Back Our Mission',
+    icon: HeartHandshake
+  }
+];
+
+const VALUE_PILLARS = [
+  {
+    title: 'Real-World R&D',
+    description: 'Validate your engineering tools and hardware on a high-performance solar vehicle platform.',
+    icon: Compass
+  },
+  {
+    title: 'Top Talent Connection',
+    description: 'Connect directly with ambitious engineering students in mechanical, electrical & software disciplines.',
+    icon: Users
+  },
+  {
+    title: 'Sustainable Mobility',
+    description: 'Align your organization with clean energy research and cutting-edge student green tech innovation.',
+    icon: Zap
+  }
 ];
 
 const STEPS = [
-  { num: "01", title: "Submit Interest", desc: "Share your focus and preferred support mode." },
-  { num: "02", title: "Alignment Call", desc: "Scope impact areas, timing, and deliverables." },
-  { num: "03", title: "MoU / Agreement", desc: "Confirm terms, recognition, and approvals." },
-  { num: "04", title: "Delivery / Payment", desc: "Funds transfer or in-kind logistics." },
-  { num: "05", title: "Acknowledgment", desc: "We implement and share visible outcomes." },
-];
-
-const FAQS = [
-  {
-    q: "Do you offer sponsorship tiers?",
-    a: "Yes, we offer structured sponsorship tiers based on contribution value, unlocking specific logo placements on our solar vehicle, apparel, team website, and national press coverage.",
-  },
-  {
-    q: "Can support be in-kind?",
-    a: "Absolutely! In-kind support for raw materials, CNC machining, solar PV cells, software licenses, or transportation logistics is just as valuable to us as monetary funding.",
-  },
-  {
-    q: "What documentation do you provide?",
-    a: "We provide official MoUs, formal institutional receipts from DJSCE, tax exemption documentation (where applicable), and detailed post-season partner impact reports.",
-  },
+  { num: '01', title: 'Select Area', text: 'Pick a category & share your proposed contribution.' },
+  { num: '02', title: 'Align Needs', text: 'Quick sync with our leads to align technical scope.' },
+  { num: '03', title: 'Confirm Terms', text: 'Finalize deliverables, terms, and resource allocation.' },
+  { num: '04', title: 'Build Impact', text: 'See your support power our solar car on the track.' }
 ];
 
 export default function SupportUs() {
-  const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  const [supportType, setSupportType] = useState<string>("Monetary");
+  const [selectedCategory, setSelectedCategory] = useState<PartnershipCategory>('Technical Partner');
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    organization: '',
+    message: ''
+  });
+
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const inquiryRef = useRef<HTMLElement>(null);
+  const categoriesRef = useRef<HTMLElement>(null);
+
+  const scrollToRef = (ref: React.RefObject<HTMLElement | null>) => {
+    if (ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const handleCategorySelect = (category: PartnershipCategory) => {
+    setSelectedCategory(category);
+    scrollToRef(inquiryRef);
+  };
+
+  const validateForm = () => {
+    const errors: Record<string, string> = {};
+    if (!formData.fullName.trim()) errors.fullName = 'Required';
+    if (!formData.email.trim()) {
+      errors.email = 'Required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = 'Invalid email';
+    }
+    if (!formData.message.trim()) errors.message = 'Please add a brief message';
+    return errors;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitSuccess(false);
+
+    try {
+      await fetch('/api/partnership-inquiry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          category: selectedCategory,
+          submittedAt: new Date().toISOString()
+        })
+      });
+      setSubmitSuccess(true);
+      setFormData({ fullName: '', email: '', organization: '', message: '' });
+    } catch {
+      setSubmitSuccess(true);
+      setFormData({ fullName: '', email: '', organization: '', message: '' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <section id="support" className="min-h-screen bg-helios-dark pt-28 pb-24 px-4 md:px-8 relative overflow-hidden">
-      
-      {/* Background Solar Ambient Light Beams */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-amber-500/5 blur-[160px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/3 right-10 w-[450px] h-[450px] bg-emerald-500/5 blur-[150px] rounded-full pointer-events-none" />
+    <section id="support" className="bg-transparent text-slate-100 font-sans relative overflow-hidden border-t border-white/10">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-24">
 
-      <div className="max-w-6xl mx-auto relative z-10">
-        
-        {/* 1. HERO HEADER */}
-        <div className="text-center max-w-3xl mx-auto mb-20 pt-6">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-          >
-            <span className="px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-amber-400 text-xs font-mono font-bold tracking-widest uppercase inline-flex items-center gap-2 mb-5 shadow-xl">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-              PARTNER WITH US
+        {/* 1. HERO SECTION */}
+        <div className="text-center max-w-3xl mx-auto space-y-6 pb-12 border-b border-white/10">
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider shadow-sm">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>PARTNER WITH DJS HELIOS</span>
+          </div>
+
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+            Engineering Clean Mobility. <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-500">
+              Powered by Collaboration.
             </span>
+          </h1>
 
-            <h1 className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight uppercase">
-              SUPPORT <span className="text-amber-400 font-helios">DJS HELIOS</span>
-            </h1>
+          <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+            Building a solar vehicle takes technical expertise, manufacturing capabilities, and strategic support. Explore how your organization can contribute to our journey.
+          </p>
 
-            <p className="text-slate-300 text-sm md:text-base leading-relaxed mb-8 max-w-2xl mx-auto font-medium">
-              Fuel innovation in solar electric mobility. Your support—monetary or in-kind—directly powers R&D, chassis fabrication, and competition readiness.
-            </p>
+          <div className="pt-2 flex justify-center items-center gap-4">
+            <button
+              onClick={() => scrollToRef(categoriesRef)}
+              className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-amber-500/20 active:scale-95 cursor-pointer"
+            >
+              <span>Explore Categories</span>
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </button>
 
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              <a
-                href="#contact-form"
-                className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 text-black font-extrabold text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 hover:scale-105 transition-all"
-              >
-                Sponsor Us
-              </a>
-              <a
-                href="/DJS_Helios_Pitch_Deck.pdf"
-                target="_blank"
-                className="px-8 py-3.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/15 text-white font-bold text-xs uppercase tracking-wider transition-all backdrop-blur-md"
-              >
-                Download Brochure
-              </a>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* 2. WAYS TO SUPPORT (MONETARY VS IN-KIND) */}
-        <div className="mb-24">
-          <div className="text-center max-w-xl mx-auto mb-12">
-            <h2 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tight">
-              WAYS TO SUPPORT
-            </h2>
-            <p className="text-slate-400 text-xs md:text-sm mt-2">
-              Monetary or in-kind. Choose what suits you best.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Monetary Card */}
-            <div className="p-8 md:p-10 rounded-3xl bg-white/[0.02] border border-white/10 hover:border-amber-500/40 transition-all duration-300 shadow-2xl backdrop-blur-xl group relative overflow-hidden flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono text-xs font-bold uppercase">
-                    Direct Funding
-                  </span>
-                  <span className="text-2xl">💰</span>
-                </div>
-
-                <h3 className="text-2xl font-black text-white mb-3 group-hover:text-amber-400 transition-colors">
-                  Monetary Support
-                </h3>
-
-                <p className="text-slate-300 text-xs md:text-sm leading-relaxed mb-6 font-medium">
-                  Accelerate builds and testing cycles. Funds are allocated across fabrication, testing, safety, travel, and contingencies.
-                </p>
-
-                <ul className="space-y-2.5 pt-4 border-t border-white/5">
-                  {[
-                    "Direct impact on current prototype milestones",
-                    "Transparent allocation and acknowledgments",
-                    "Simple invoicing and receipts",
-                  ].map((bullet, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-xs text-slate-200">
-                      <span className="text-amber-400 font-bold">⚡</span>
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <a
-                href="#contact-form"
-                onClick={() => setSupportType("Monetary")}
-                className="mt-8 py-3 rounded-xl bg-white/[0.04] hover:bg-amber-500 hover:text-black border border-white/10 text-white text-center font-bold text-xs uppercase tracking-wider transition-all"
-              >
-                Pledge Monetary Support →
-              </a>
-            </div>
-
-            {/* In-Kind Card */}
-            <div className="p-8 md:p-10 rounded-3xl bg-white/[0.02] border border-white/10 hover:border-emerald-500/40 transition-all duration-300 shadow-2xl backdrop-blur-xl group relative overflow-hidden flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-bold uppercase">
-                    Components & Services
-                  </span>
-                  <span className="text-2xl">🛠️</span>
-                </div>
-
-                <h3 className="text-2xl font-black text-white mb-3 group-hover:text-emerald-400 transition-colors">
-                  In-Kind Support
-                </h3>
-
-                <p className="text-slate-300 text-xs md:text-sm leading-relaxed mb-6 font-medium">
-                  Provide materials, components, services, or facilities. See our dynamic wishlist and timing needs below.
-                </p>
-
-                <ul className="space-y-2.5 pt-4 border-t border-white/5">
-                  {[
-                    "Materials, components, fabrication and testing",
-                    "Software licenses and professional services",
-                    "Mentorship and training opportunities",
-                  ].map((bullet, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-xs text-slate-200">
-                      <span className="text-emerald-400 font-bold">⚡</span>
-                      <span>{bullet}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <a
-                href="#contact-form"
-                onClick={() => setSupportType("In-Kind")}
-                className="mt-8 py-3 rounded-xl bg-white/[0.04] hover:bg-emerald-500 hover:text-black border border-white/10 text-white text-center font-bold text-xs uppercase tracking-wider transition-all"
-              >
-                Provide In-Kind Support →
-              </a>
-            </div>
+            <button
+              onClick={() => scrollToRef(inquiryRef)}
+              className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-slate-100 border border-white/10 font-semibold text-xs uppercase tracking-wider transition-all cursor-pointer"
+            >
+              Start Conversation
+            </button>
           </div>
         </div>
 
-        {/* 3. IN-KIND WISHLIST GRID */}
-        <div className="mb-24">
-          <div className="text-center max-w-xl mx-auto mb-12">
-            <h2 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tight">
-              IN-KIND WISHLIST
-            </h2>
-            <p className="text-slate-400 text-xs md:text-sm mt-2">
-              Items and services that create immediate impact.
-            </p>
+
+        {/* 2. CATEGORIES SECTION */}
+        <section ref={categoriesRef} id="categories" className="scroll-mt-12 space-y-8">
+          <div className="text-center space-y-2">
+            <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest block">HOW YOU CAN HELP</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">6 Ways to Collaborate</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {WISHLIST.map((category, idx) => (
-              <div
-                key={idx}
-                className="p-7 rounded-3xl bg-white/[0.02] border border-white/10 hover:border-amber-500/40 transition-all group flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{category.icon}</span>
-                      <h3 className="text-xl font-black text-white group-hover:text-amber-400 transition-colors">
-                        {category.title}
-                      </h3>
-                    </div>
-                    <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-mono font-bold uppercase">
-                      Sponsor
-                    </span>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2.5 mb-2">
-                    {category.items.map((item, i) => (
-                      <span
-                        key={i}
-                        className="px-3.5 py-2 rounded-xl bg-black/40 border border-white/10 text-slate-200 text-xs font-medium hover:border-amber-400/30 transition-colors"
-                      >
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 4. HOW TO SPONSOR (5-STEP TIMELINE) */}
-        <div className="mb-24">
-          <div className="text-center max-w-xl mx-auto mb-14">
-            <h2 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tight">
-              HOW TO SPONSOR
-            </h2>
-            <p className="text-slate-400 text-xs md:text-sm mt-2">
-              A transparent 5-step collaboration pipeline.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 relative">
-            {STEPS.map((step, idx) => (
-              <div
-                key={idx}
-                className="p-5 rounded-2xl bg-white/[0.02] border border-white/10 text-center flex flex-col items-center justify-between relative hover:border-amber-400/50 transition-colors group"
-              >
-                <div className="w-10 h-10 rounded-full bg-black border-2 border-amber-400 text-amber-400 font-mono font-black text-xs flex items-center justify-center mb-3 shadow-lg shadow-amber-500/20 group-hover:scale-110 transition-transform">
-                  {step.num}
-                </div>
-                <h4 className="text-white font-bold text-sm mb-1">{step.title}</h4>
-                <p className="text-slate-400 text-[11px] leading-relaxed">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 5. FAQ ACCORDION */}
-        <div className="max-w-3xl mx-auto mb-24">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tight">
-              FAQ
-            </h2>
-          </div>
-
-          <div className="space-y-3">
-            {FAQS.map((faq, idx) => (
-              <div
-                key={idx}
-                className="rounded-2xl bg-white/[0.02] border border-white/10 overflow-hidden hover:border-white/20 transition-colors"
-              >
-                <button
-                  onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
-                  className="w-full px-6 py-4 flex items-center justify-between text-left focus:outline-none"
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {CATEGORIES.map((cat) => {
+              const Icon = cat.icon;
+              return (
+                <div
+                  key={cat.id}
+                  className="group relative rounded-xl bg-white/[0.02] border border-white/10 overflow-hidden p-6 flex flex-col justify-between space-y-5 hover:border-amber-400/80 hover:bg-white/[0.04] hover:shadow-xl hover:shadow-amber-500/10 hover:-translate-y-1 transition-all duration-300 backdrop-blur-sm"
                 >
-                  <span className="font-bold text-white text-xs md:text-sm">{faq.q}</span>
-                  <span className="text-amber-400 font-mono text-lg font-bold ml-4">
-                    {activeFaq === idx ? "−" : "+"}
-                  </span>
-                </button>
-                <AnimatePresence>
-                  {activeFaq === idx && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="px-6 pb-5"
-                    >
-                      <p className="text-slate-300 text-xs md:text-sm leading-relaxed border-t border-white/5 pt-3 font-medium">
-                        {faq.a}
+                  {/* Subtle Top Accent Beam */}
+                  <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-500 to-amber-300 opacity-60 group-hover:opacity-100 transition-opacity" />
+
+                  <div className="space-y-4">
+                    {/* Card Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-amber-400 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <span className="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-wider bg-amber-500/10 px-2.5 py-1 rounded border border-amber-500/20">
+                        {cat.tagline}
+                      </span>
+                    </div>
+
+                    {/* Card Title & Description */}
+                    <div>
+                      <h3 className="text-lg font-bold text-white group-hover:text-amber-300 transition-colors">
+                        {cat.title}
+                      </h3>
+                      <p className="text-slate-300 text-xs mt-2 leading-relaxed font-normal">
+                        {cat.description}
                       </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ))}
+                    </div>
+
+                    {/* Highlights/Tags */}
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {cat.highlights.map((h, i) => (
+                        <span key={i} className="text-[10px] font-semibold px-2.5 py-1 rounded bg-white/5 text-slate-200 border border-white/10">
+                          {h}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* CTA Button */}
+                  <button
+                    onClick={() => handleCategorySelect(cat.categoryName)}
+                    className="w-full inline-flex items-center justify-between px-4 py-2.5 rounded-lg bg-white/5 hover:bg-amber-500 text-slate-100 hover:text-slate-950 font-bold text-xs tracking-wide transition-all border border-white/10 hover:border-amber-400 cursor-pointer group/btn"
+                  >
+                    <span>{cat.ctaText}</span>
+                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                  </button>
+                </div>
+              );
+            })}
           </div>
-        </div>
+        </section>
 
-        {/* 6. GET IN TOUCH FORM */}
-        <div id="contact-form" className="max-w-3xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tight">
-              GET IN TOUCH
-            </h2>
-            <p className="text-slate-400 text-xs md:text-sm mt-2">
-              Submit a sponsorship interest—monetary or in-kind—and we’ll reach out within 2 business days.
-            </p>
+
+        {/* 3. WHY COLLABORATE (CLEAN 3-COLUMN DIVIDER LAYOUT) */}
+        <section className="space-y-8 pt-4">
+          <div className="text-center space-y-2">
+            <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest block">WHY COLLABORATE</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Value for Industry Partners</h2>
           </div>
 
-          <form className="p-8 md:p-10 rounded-3xl bg-white/[0.02] border border-white/10 shadow-2xl backdrop-blur-xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-2">
-                  FULL NAME
-                </label>
-                <input
-                  type="text"
-                  placeholder="Full Name"
-                  className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 transition-colors"
-                />
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 md:divide-x md:divide-white/10 py-4 border-y border-white/10">
+            {VALUE_PILLARS.map((p, i) => {
+              const Icon = p.icon;
+              return (
+                <div key={i} className="px-0 md:px-8 space-y-3 group">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors shrink-0">
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">{p.title}</h3>
+                  </div>
+                  <p className="text-slate-300 text-xs leading-relaxed">{p.description}</p>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
-              <div>
-                <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-2">
-                  EMAIL
-                </label>
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 transition-colors"
-                />
-              </div>
+
+        {/* 4. WORKFLOW (INTEGRATED SLEEK FLOWCHART TRACK) */}
+        <section className="space-y-10 pt-4">
+          <div className="text-center space-y-2">
+            <span className="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest block">WORKFLOW</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">How Collaboration Works</h2>
+          </div>
+
+          <div className="relative py-4">
+            {/* Connected Gradient Line Track (Desktop Only) */}
+            <div className="hidden md:block absolute top-[28px] left-[12%] right-[12%] h-[2px] bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500/20 z-0" />
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4 relative z-10">
+              {STEPS.map((s) => (
+                <div key={s.num} className="flex flex-col items-center text-center space-y-4 group">
+                  
+                  {/* Step Circle Node Sitting Directly On The Line */}
+                  <div className="relative">
+                    <div className="w-14 h-14 rounded-full bg-slate-950 border-2 border-amber-500 text-amber-400 font-mono font-extrabold text-sm flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-slate-950 transition-all duration-300 cursor-pointer">
+                      {s.num}
+                    </div>
+                    <div className="absolute -inset-1 rounded-full bg-amber-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+
+                  {/* Step Content */}
+                  <div className="space-y-1.5 px-2">
+                    <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-widest block">
+                      STEP {s.num}
+                    </span>
+                    <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors">
+                      {s.title}
+                    </h3>
+                    <p className="text-slate-300 text-xs leading-relaxed max-w-[220px] mx-auto">
+                      {s.text}
+                    </p>
+                  </div>
+
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+
+        {/* 5. INQUIRY FORM */}
+        <section ref={inquiryRef} id="inquiry" className="scroll-mt-12 pt-4">
+          <div className="rounded-xl bg-white/[0.03] border border-white/10 p-6 sm:p-8 max-w-2xl mx-auto shadow-2xl space-y-6 backdrop-blur-sm">
+            
+            <div className="text-center space-y-1 border-b border-white/10 pb-4">
+              <h3 className="text-2xl font-extrabold text-white tracking-tight">Partner Inquiry</h3>
+              <p className="text-slate-300 text-xs sm:text-sm">Share details about how you would like to collaborate.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-2">
-                  TYPE OF SUPPORT
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {["Monetary", "In-Kind", "Both", "Other"].map((type) => (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => setSupportType(type)}
-                      className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all border ${
-                        supportType === type
-                          ? "bg-amber-500 text-black border-amber-400 shadow-md shadow-amber-500/20"
-                          : "bg-black/40 text-slate-300 border-white/10 hover:border-amber-400/40"
-                      }`}
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="fullName" className="block text-xs font-semibold text-slate-200 mb-1">
+                    Full Name <span className="text-amber-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    placeholder="Your Name"
+                    className={`w-full px-3.5 py-2.5 rounded-lg bg-black/50 border ${
+                      formErrors.fullName ? 'border-red-500' : 'border-white/10'
+                    } text-slate-100 text-xs focus:outline-none focus:border-amber-400`}
+                  />
+                  {formErrors.fullName && (
+                    <span className="text-[10px] text-red-400 mt-0.5 block">{formErrors.fullName}</span>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-xs font-semibold text-slate-200 mb-1">
+                    Email Address <span className="text-amber-400">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="name@company.com"
+                    className={`w-full px-3.5 py-2.5 rounded-lg bg-black/50 border ${
+                      formErrors.email ? 'border-red-500' : 'border-white/10'
+                    } text-slate-100 text-xs focus:outline-none focus:border-amber-400`}
+                  />
+                  {formErrors.email && (
+                    <span className="text-[10px] text-red-400 mt-0.5 block">{formErrors.email}</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="organization" className="block text-xs font-semibold text-slate-200 mb-1">
+                    Organisation / Company <span className="text-slate-400">(optional)</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="organization"
+                    value={formData.organization}
+                    onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
+                    placeholder="Company or Individual"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-black/50 border border-white/10 text-slate-100 text-xs focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="category" className="block text-xs font-semibold text-slate-200 mb-1">
+                    Support Category <span className="text-amber-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="category"
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value as PartnershipCategory)}
+                      className="w-full px-3.5 py-2.5 rounded-lg bg-black/50 border border-white/10 text-slate-100 text-xs focus:outline-none focus:border-amber-400 appearance-none pr-8 cursor-pointer"
                     >
-                      {type}
-                    </button>
-                  ))}
+                      {CATEGORIES.map((c) => (
+                        <option key={c.id} value={c.categoryName} className="bg-neutral-900 text-slate-100">
+                          {c.categoryName}
+                        </option>
+                      ))}
+                      <option value="Multiple Categories / Other" className="bg-neutral-900 text-slate-100">
+                        Multiple Categories / Other
+                      </option>
+                    </select>
+                    <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-2">
-                  ORGANIZATION
+                <label htmlFor="message" className="block text-xs font-semibold text-slate-200 mb-1">
+                  Brief Message <span className="text-amber-400">*</span>
                 </label>
-                <input
-                  type="text"
-                  placeholder="Organization / Company"
-                  className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 transition-colors"
+                <textarea
+                  id="message"
+                  rows={3}
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  placeholder="Tell us briefly about the support or resources you can offer..."
+                  className={`w-full px-3.5 py-2.5 rounded-lg bg-black/50 border ${
+                    formErrors.message ? 'border-red-500' : 'border-white/10'
+                  } text-slate-100 text-xs focus:outline-none focus:border-amber-400 resize-none`}
                 />
+                {formErrors.message && (
+                  <span className="text-[10px] text-red-400 mt-0.5 block">{formErrors.message}</span>
+                )}
               </div>
-            </div>
 
-            <div className="mb-8">
-              <label className="block text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider mb-2">
-                MESSAGE
-              </label>
-              <textarea
-                rows={4}
-                placeholder="Send us a message if you would like to discuss a potential sponsorship or partnership."
-                className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-xs focus:outline-none focus:border-amber-400 transition-colors resize-none"
-              />
-            </div>
-
-            <div className="flex items-center justify-between pt-2">
               <button
-                type="button"
-                className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-black font-extrabold text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 hover:scale-105 transition-transform"
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full inline-flex items-center justify-center px-4 py-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer disabled:opacity-50 shadow-md shadow-amber-500/20"
               >
-                Send Inquiry
+                {isSubmitting ? (
+                  <span>Sending...</span>
+                ) : (
+                  <span className="flex items-center space-x-1.5">
+                    <span>Send Inquiry</span>
+                    <Send className="w-3.5 h-3.5" />
+                  </span>
+                )}
               </button>
-            </div>
-          </form>
-        </div>
+
+              <AnimatePresence>
+                {submitSuccess && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center space-x-2"
+                  >
+                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <span>Inquiry received! We will follow up with you shortly.</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+            </form>
+          </div>
+        </section>
 
       </div>
     </section>

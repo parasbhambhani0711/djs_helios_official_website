@@ -9,6 +9,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
+    { name: "Home", href: "#hero" },
     { name: "About", href: "#about" },
     { name: "Hall of Fame", href: "#hall-of-fame" },
     { name: "Gallery", href: "#gallery" },
@@ -22,7 +23,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 rounded-2xl bg-black/50 backdrop-blur-md border border-white/10 shadow-2xl">
         
         {/* Brand / Logo - Stacked Typography Matching Brand Identity */}
-        <Link href="/" className="flex items-center gap-3.5 group">
+        <Link href="#hero" className="flex items-center gap-3.5 group">
           <div className="relative w-11 h-11 rounded-full bg-black border border-white/20 flex items-center justify-center p-1 group-hover:border-amber-400 group-hover:scale-105 transition-all shadow-lg">
             <Image
               src="/helios-logo.jpg"

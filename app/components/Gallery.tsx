@@ -61,7 +61,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     title: "Race Track Testing & Profile",
     category: "race",
     type: "image",
-    src: "/gallery/hero-track-jpg.jpeg",
+    src: "/gallery/hero-track.png",
     badge: "Solar Vehicle",
   },
   {
@@ -99,6 +99,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
 ];
 
 export default function Gallery() {
+  // State and Variables scope required for JSX below
   const [filter, setFilter] = useState<Category>("all");
 
   const filteredItems =
@@ -115,7 +116,7 @@ export default function Gallery() {
   ];
 
   return (
-    <section id="legacy" className="py-24 px-4 md:px-8 bg-helios-dark relative border-t border-white/5">
+    <section id="gallery" className="py-24 px-4 md:px-8 bg-helios-dark relative border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         
         {/* Section Heading */}
