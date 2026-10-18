@@ -2,10 +2,21 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: Request) {
   try {
+    const apiKey = process.env.RESEND_API_KEY;
+
+    if (!apiKey) {
+      console.error('RESEND_API_KEY is missing from environment variables.');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
+
+    // Initialize Resend dynamically inside the request handler
+    const resend = new Resend(apiKey);
+
     const body = await request.json();
     const { fullName, email, organization, category, message } = body;
 
@@ -20,7 +31,7 @@ export async function POST(request: Request) {
     // Send email via Resend
     const data = await resend.emails.send({
       from: 'DJS Helios Website <onboarding@resend.dev>',
-      to: ['parasbhambhani07@gmail.com'], // Replace with your team's official email address
+      to: ['parasbhambhani07@gmail.com'],
       replyTo: email,
       subject: `New Partnership Inquiry: ${category} - ${fullName}`,
       html: `
@@ -39,6 +50,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, data });
   } catch (error) {
+    console.error('Resend execution error:', error);
     return NextResponse.json(
       { error: 'Failed to send inquiry' },
       { status: 500 }
